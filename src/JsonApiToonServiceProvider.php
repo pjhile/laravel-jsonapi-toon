@@ -3,12 +3,12 @@
 namespace Pjhile\JsonApiToon;
 
 use Illuminate\Support\ServiceProvider;
-use LaravelJsonApi\Contracts\Server\Server;
-use Pjhile\JsonApiToon\Encodings\ToonEncoding;
+use LaravelJsonApi\Core\Server\Server;
+use Pjhile\JsonApiToon\Encoders\ToonEncoder;
 
 class JsonApiToonServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -18,12 +18,13 @@ class JsonApiToonServiceProvider extends ServiceProvider
 
         $this->app->booted(function () {
             /** @var Server $server */
-            $server = $this->app->make(Server::class);
-            $server->encoding('application/toon', new ToonEncoding());
+            foreach (Server::all() as $server) {
+                $server->encoder('application/toon', new ToonEncoder());
+            }
         });
     }
 
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/json-api-toon.php', 'json-api-toon');
     }
