@@ -2,9 +2,9 @@
 
 namespace Pjhile\JsonApiToon;
 
-use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 use Illuminate\Support\ServiceProvider;
-use Pjhile\JsonApiToon\Http\Responses\ToonResponder;
+use LaravelJsonApi\Contracts\Server\Server;
+use Pjhile\JsonApiToon\Encodings\ToonEncoding;
 
 class JsonApiToonServiceProvider extends ServiceProvider
 {
@@ -16,11 +16,11 @@ class JsonApiToonServiceProvider extends ServiceProvider
             ], 'config');
         }
 
-        // Auto-register TOON for all APIs
-        JsonApi::defaultEncoding([
-            'application/vnd.api+json',
-            config('json-api-toon.media-type', 'application/toon') => ToonResponder::class,
-        ]);
+        $this->app->booted(function () {
+            /** @var Server $server */
+            $server = $this->app->make(Server::class);
+            $server->encoding('application/toon', new ToonEncoding());
+        });
     }
 
     public function register()
