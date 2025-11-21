@@ -3,7 +3,7 @@
 namespace Pjhile\JsonApiToon;
 
 use Illuminate\Support\ServiceProvider;
-use LaravelJsonApi\Core\Server\Server;
+use LaravelJsonApi\LaravelJsonApi;
 use Pjhile\JsonApiToon\Encoders\ToonEncoder;
 
 class JsonApiToonServiceProvider extends ServiceProvider
@@ -16,11 +16,9 @@ class JsonApiToonServiceProvider extends ServiceProvider
             ], 'config');
         }
 
-        $this->app->booted(function () {
-            /** @var Server $server */
-            foreach (Server::all() as $server) {
-                $server->encoder('application/toon', new ToonEncoder());
-            }
+        // This is the official way in v5+ to add a custom encoder globally
+        LaravelJsonApi::extend(function ($server) {
+            $server->encoder('application/toon', new ToonEncoder());
         });
     }
 
