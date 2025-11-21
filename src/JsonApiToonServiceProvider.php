@@ -3,7 +3,7 @@
 namespace Pjhile\JsonApiToon;
 
 use Illuminate\Support\ServiceProvider;
-use LaravelJsonApi\Facades\JsonApi; // ← this is the correct facade
+use LaravelJsonApi\Events\ServerBooted;
 use Pjhile\JsonApiToon\Encoders\ToonEncoder;
 
 class JsonApiToonServiceProvider extends ServiceProvider
@@ -16,9 +16,9 @@ class JsonApiToonServiceProvider extends ServiceProvider
             ], 'config');
         }
 
-        // Correct way in v5.1+: use the JsonApi facade helper
-        JsonApi::extend(function ($server) {
-            $server->encoder('application/toon', new ToonEncoder());
+        // Official v5+ way: listen for when any server has booted, then add the encoder
+        $this->app['events']->listen(ServerBooted::class, function (ServerBooted $event) {
+            $event->server->encoder('application/toon', new ToonEncoder());
         });
     }
 
