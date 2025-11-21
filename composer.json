@@ -1,10 +1,10 @@
 {
     "name": "pjhile/laravel-jsonapi-toon",
     "description": "TOON (Token-Oriented Object Notation) content-negotiated responses for laravel-jsonapi",
-    "keywords": ["laravel", "jsonapi", "json:api", "toon", "llm"],
+    "keywords": ["laravel", "json-api", "jsonapi", "toon", "llm", "token-efficient", "ai"],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.1|^8.2|^8.3",
         "cloudcreativity/laravel-json-api": "^4.0|^5.0",
         "helgesverre/toon": "^1.0"
     },
